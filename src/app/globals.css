@@ -1,0 +1,19 @@
+:root {
+  --primary-color: #8A5B8E; /* Roxo Amora */
+  --secondary-color: #D988A1; /* Rosa Framboesa */
+  --secondary-hover: #c46b86;
+  --bg-color: #FDF9F1; /* Bege suave */
+  --text-dark: #2C2C2C;
+  --text-light: #5A5A5A;
+  --white: #FFFFFF;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font-outfit), sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-dark);
+  line-height: 1.6;
+}
+h1, h2, h3, h4, h5, h6 { font-family: var(--font-playfair), serif; }
+a { text-decoration: none; color: inherit; }
+main { min-height: calc(100vh - 200px); }

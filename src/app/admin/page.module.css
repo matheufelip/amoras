@@ -1,0 +1,166 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(138, 91, 142, 0.1);
+}
+
+.title {
+  font-size: 2.2rem;
+  color: var(--primary-color);
+  margin-bottom: 0.25rem;
+}
+
+.subtitle {
+  color: var(--text-light);
+  font-size: 1.1rem;
+}
+
+.newButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--secondary-color);
+  color: var(--white);
+  padding: 0.8rem 1.5rem;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.newButton:hover {
+  background-color: var(--secondary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(138, 91, 142, 0.2);
+}
+
+.tableContainer {
+  background-color: var(--white);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.table th {
+  padding: 1.5rem 1rem;
+  color: var(--primary-color);
+  font-weight: 600;
+  border-bottom: 2px solid rgba(138, 91, 142, 0.1);
+  background-color: rgba(255, 250, 240, 0.5);
+}
+
+.table td {
+  padding: 1.2rem 1rem;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  vertical-align: middle;
+}
+
+.productCell {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.imageThumb {
+  width: 50px;
+  height: 50px;
+  background-color: var(--secondary-color);
+  border-radius: 8px;
+  opacity: 0.5;
+}
+
+.productName {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.priceCell {
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.stockInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  align-items: flex-start;
+}
+
+.stockCount {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.badgeReady {
+  background-color: #e6f8ec;
+  color: #1a8f4c;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.badgeLeadTime {
+  background-color: #fff4e6;
+  color: #e67e22;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.actionBtn {
+  background: none;
+  border: none;
+  color: var(--text-light);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.actionBtn:hover {
+  background-color: rgba(138, 91, 142, 0.1);
+  color: var(--primary-color);
+}
+
+.actionBtnDelete {
+  background: none;
+  border: none;
+  color: var(--text-light);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.actionBtnDelete:hover {
+  background-color: rgba(255, 107, 107, 0.1);
+  color: #ff6b6b;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 3rem !important;
+  color: var(--text-light);
+  font-style: italic;
+}
