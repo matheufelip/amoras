@@ -15,11 +15,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const [loading, setLoading] = useState(true);
 
-  // Não mostrar o layout na tela de login
-  if (pathname === "/admin/login") {
-    return <>{children}</>;
-  }
-
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (!user) {
@@ -35,6 +30,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     await signOut(auth);
     router.push("/admin/login");
   };
+
+  // Não mostrar o layout na tela de login
+  if (pathname === "/admin/login") {
+    return <>{children}</>;
+  }
 
   if (loading) {
     return <div style={{ display: "flex", height: "100vh", alignItems: "center", justifyContent: "center" }}>Verificando acesso...</div>;
