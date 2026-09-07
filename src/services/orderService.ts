@@ -6,7 +6,8 @@ import {
   doc, 
   updateDoc,
   query,
-  orderBy
+  orderBy,
+  deleteDoc
 } from "firebase/firestore";
 
 export type OrderStatus = "Pendente" | "Em Produção" | "Enviado";
@@ -61,4 +62,8 @@ export const getOrders = async (): Promise<Order[]> => {
 
 export const updateOrderStatus = async (id: string, status: OrderStatus): Promise<void> => {
   await updateDoc(doc(db, COLLECTION_NAME, id), { status });
+};
+
+export const deleteOrder = async (id: string): Promise<void> => {
+  await deleteDoc(doc(db, COLLECTION_NAME, id));
 };

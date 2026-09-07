@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import styles from "./page.module.css";
-import { getOrders, updateOrderStatus, Order, OrderStatus } from "@/services/orderService";
-import { CheckCircle, Clock, Package, ChevronDown } from "lucide-react";
+import { getOrders, updateOrderStatus, deleteOrder, Order, OrderStatus } from "@/services/orderService";
+import { CheckCircle, Clock, Package, ChevronDown, Trash2 } from "lucide-react";
 
 const STATUS_COLUMNS: { status: OrderStatus; label: string; color: string; bgColor: string; icon: React.ReactNode }[] = [
   {
@@ -55,6 +55,18 @@ export default function Pedidos() {
     } catch (error) {
       console.error(error);
       alert("Erro ao atualizar status do pedido.");
+    }
+  };
+
+  const handleDeleteOrder = async (orderId: string) => {
+    if (confirm("Tem certeza que deseja excluir este pedido?")) {
+      try {
+        await deleteOrder(orderId);
+        setOrders(prev => prev.filter(o => o.id !== orderId));
+      } catch (error) {
+        console.error(error);
+        alert("Erro ao excluir pedido.");
+      }
     }
   };
 
@@ -118,18 +130,29 @@ export default function Pedidos() {
                       <span className={styles.orderTotal}>
                         R$ {order.total.toFixed(2).replace('.', ',')}
                       </span>
-                      <div className={styles.selectWrapper}>
-                        <select
-                          value={order.status}
-                          onChange={e => handleStatusChange(order.id, e.target.value as OrderStatus)}
-                          className={styles.statusSelect}
-                          style={{ borderColor: col.color, color: col.color }}
-                        >
-                          <option value="Pendente">Pendente</option>
-                          <option value="Em Produção">Em Produção</option>
-                          <option value="Enviado">Enviado</option>
-                        </select>
-                        <ChevronDown size={14} style={{ color: col.color }} />
+                      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                        <div className={styles.selectWrapper}>
+                          <select
+                            value={order.status}
+                            onChange={e => handleStatusChange(order.id, e.target.value as OrderStatus)}
+                            className={styles.statusSelect}
+                            style={{ borderColor: col.color, color: col.color }}
+                          >
+                            <option value="Pendente">Pendente</option>
+                            <option value="Em Produção">Em Produção</option>
+                            <option value="Enviado">Enviado</option>
+                          </select>
+                          <ChevronDown size={14} style={{ color: col.color }} />
+                        </div>
+                        {order.status === "Pendente" && (
+                          <button 
+                            onClick={() => handleDeleteOrder(order.id)}
+                            style={{ background: 'none', border: 'none', color: '#e74c3c', cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                            title="Excluir pedido pendente"
+                          >
+                            <Trash2 size={18} />
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>

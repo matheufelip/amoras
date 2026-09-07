@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Package, ShoppingBag, LogOut, Settings } from "lucide-react";
@@ -11,15 +13,32 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname();
   const router = useRouter();
 
+  const [loading, setLoading] = useState(true);
+
   // Não mostrar o layout na tela de login
   if (pathname === "/admin/login") {
     return <>{children}</>;
   }
 
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (!user) {
+        router.push("/admin/login");
+      } else {
+        setLoading(false);
+      }
+    });
+    return () => unsubscribe();
+  }, [router]);
+
   const handleLogout = async () => {
     await signOut(auth);
     router.push("/admin/login");
   };
+
+  if (loading) {
+    return <div style={{ display: "flex", height: "100vh", alignItems: "center", justifyContent: "center" }}>Verificando acesso...</div>;
+  }
 
   return (
     <div style={{ display: "flex", minHeight: "100vh" }}>

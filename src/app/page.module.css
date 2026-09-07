@@ -89,6 +89,11 @@
   box-shadow: 0 20px 50px rgba(138, 91, 142, 0.15);
   animation: morph 8s ease-in-out infinite;
   border: 8px solid white;
+  -webkit-mask-image: -webkit-radial-gradient(white, black); /* Fix for Safari overflow bug */
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
 }
 
 .heroImg {
