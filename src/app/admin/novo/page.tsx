@@ -23,6 +23,7 @@ export default function NovoProduto() {
   
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState({ type: "", text: "" });
 
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Remove tudo que não for número
@@ -59,13 +60,15 @@ export default function NovoProduto() {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+    setMessage({ type: "", text: "" });
+
     if (imageFiles.length === 0) {
-      alert("Por favor, selecione pelo menos uma imagem para o produto.");
+      setMessage({ type: "error", text: "Por favor, selecione pelo menos uma imagem." });
       return;
     }
 
     if (rawPrice <= 0) {
-      alert("O preço deve ser maior que zero.");
+      setMessage({ type: "error", text: "O preço deve ser maior que zero." });
       return;
     }
 
@@ -81,11 +84,13 @@ export default function NovoProduto() {
         leadTimeDays: !isReadyDelivery && leadTime ? Number(leadTime) : undefined
       }, imageFiles);
 
-      alert("Produto cadastrado com sucesso!");
-      router.push("/admin");
+      setMessage({ type: "success", text: "Produto cadastrado com sucesso!" });
+      setTimeout(() => {
+        router.push("/admin");
+      }, 1500);
     } catch (error) {
       console.error(error);
-      alert("Erro ao cadastrar produto. Verifique o console.");
+      setMessage({ type: "error", text: "Erro ao cadastrar produto. Tente novamente." });
     } finally {
       setLoading(false);
     }
@@ -100,6 +105,12 @@ export default function NovoProduto() {
         </Link>
         <h1 className={styles.title}>Cadastrar Produto</h1>
       </header>
+
+      {message.text && (
+        <div className={`${styles.messageBox} ${message.type === 'error' ? styles.messageError : styles.messageSuccess}`}>
+          {message.text}
+        </div>
+      )}
 
       <form onSubmit={handleSave} className={styles.formContainer}>
         <div className={styles.imageSection}>
