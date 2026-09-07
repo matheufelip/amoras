@@ -63,6 +63,14 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Footer / Link Escondido Admin */}
+      <footer style={{ textAlign: "center", padding: "2rem", opacity: 0.5, fontSize: "0.8rem", marginTop: "2rem" }}>
+        <p>© {new Date().getFullYear()} Amoras - Artesanatos Personalizados. Todos os direitos reservados.</p>
+        <Link href="/admin" style={{ color: "inherit", textDecoration: "none", marginTop: "0.5rem", display: "inline-block" }}>
+          Acesso Restrito
+        </Link>
+      </footer>
     </div>
   );
 }
