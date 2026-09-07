@@ -32,8 +32,13 @@ export const addProduct = async (productData: Omit<Product, "id" | "images">, im
     imageUrls.push(url);
   }
 
+  // Firebase não aceita 'undefined', então removemos propriedades undefined
+  const cleanData = Object.fromEntries(
+    Object.entries(productData).filter(([_, v]) => v !== undefined)
+  );
+
   const docRef = await addDoc(collection(db, COLLECTION_NAME), {
-    ...productData,
+    ...cleanData,
     images: imageUrls,
     createdAt: new Date().toISOString()
   });
