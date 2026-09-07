@@ -1,22 +1,43 @@
-import { db, storage } from "@/lib/firebase";
+import { db } from "@/lib/firebase";
 import { collection, addDoc, getDocs, deleteDoc, doc } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { Product } from "@/context/CartContext";
 
 const COLLECTION_NAME = "products";
 
-export const uploadProductImage = async (file: File): Promise<string> => {
-  const fileRef = ref(storage, `products/${Date.now()}_${file.name}`);
-  await uploadBytes(fileRef, file);
-  return await getDownloadURL(fileRef);
+export const uploadToImgBB = async (file: File): Promise<string> => {
+  const apiKey = process.env.NEXT_PUBLIC_IMGBB_API_KEY;
+  if (!apiKey) throw new Error("ImgBB API key is missing");
+
+  const formData = new FormData();
+  formData.append("image", file);
+
+  const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
+    method: "POST",
+    body: formData,
+  });
+
+  const data = await response.json();
+  if (data.success) {
+    return data.data.url;
+  } else {
+    throw new Error("Failed to upload image to ImgBB");
+  }
 };
 
-export const addProduct = async (productData: Omit<Product, "id">, imageFile?: File): Promise<string> => {
-  let imageUrl = "";
-  if (imageFile) imageUrl = await uploadProductImage(imageFile);
+export const addProduct = async (productData: Omit<Product, "id" | "images">, imageFiles: File[]): Promise<string> => {
+  const imageUrls: string[] = [];
+  
+  for (const file of imageFiles) {
+    const url = await uploadToImgBB(file);
+    imageUrls.push(url);
+  }
+
   const docRef = await addDoc(collection(db, COLLECTION_NAME), {
-    ...productData, image: imageUrl, createdAt: new Date().toISOString()
+    ...productData,
+    images: imageUrls,
+    createdAt: new Date().toISOString()
   });
+  
   return docRef.id;
 };
 
@@ -31,7 +52,7 @@ export const getProducts = async (): Promise<Product[]> => {
       price: Number(data.price),
       description: data.description,
       category: data.category,
-      image: data.image,
+      images: data.images || [data.image].filter(Boolean), // Suporte a produtos antigos com 'image'
       stock: Number(data.stock),
       isReadyDelivery: Boolean(data.isReadyDelivery),
       leadTimeDays: data.leadTimeDays ? Number(data.leadTimeDays) : undefined
@@ -40,9 +61,7 @@ export const getProducts = async (): Promise<Product[]> => {
   return products;
 };
 
-export const deleteProduct = async (id: string, imageUrl?: string): Promise<void> => {
+export const deleteProduct = async (id: string): Promise<void> => {
+  // Com ImgBB não apagamos a imagem da nuvem automaticamente, mas apagamos o registro do banco
   await deleteDoc(doc(db, COLLECTION_NAME, id));
-  if (imageUrl) {
-    try { await deleteObject(ref(storage, imageUrl)); } catch (e) { console.error(e); }
-  }
 };

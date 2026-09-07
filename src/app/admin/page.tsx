@@ -28,10 +28,10 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleDelete = async (id: string, imageUrl: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm("Tem certeza que deseja excluir este produto?")) {
       try {
-        await deleteProduct(id, imageUrl);
+        await deleteProduct(id);
         await loadProducts(); // recarrega a lista
       } catch (error) {
         console.error(error);
@@ -72,8 +72,8 @@ export default function AdminDashboard() {
             {products.map((product) => (
               <tr key={product.id}>
                 <td className={styles.productCell}>
-                  {product.image ? (
-                    <img src={product.image} alt={product.name} className={styles.imageThumb} style={{ objectFit: 'cover' }} />
+                  {product.images?.[0] ? (
+                    <img src={product.images?.[0]} alt={product.name} className={styles.imageThumb} style={{ objectFit: 'cover' }} />
                   ) : (
                     <div className={styles.imageThumb}></div>
                   )}
@@ -101,7 +101,7 @@ export default function AdminDashboard() {
                     <button 
                       className={styles.actionBtnDelete} 
                       aria-label="Excluir"
-                      onClick={() => handleDelete(product.id, product.image)}
+                      onClick={() => handleDelete(product.id)}
                     >
                       <Trash2 size={18} />
                     </button>

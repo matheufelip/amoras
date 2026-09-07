@@ -1,1 +1,99 @@
-/* Empty for now as I used inline styles */
+.container {
+  width: 100%;
+}
+
+.hero {
+  background-color: rgba(217, 136, 161, 0.1);
+  padding: 6rem 2rem;
+  text-align: center;
+  border-bottom: 1px solid rgba(138, 91, 142, 0.1);
+}
+
+.heroContent {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 3.5rem;
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  color: var(--text-dark);
+  margin-bottom: 3rem;
+  line-height: 1.6;
+}
+
+.ctaButton {
+  display: inline-block;
+  background-color: var(--secondary-color);
+  color: white;
+  padding: 1.2rem 2.5rem;
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(217, 136, 161, 0.3);
+}
+
+.ctaButton:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(217, 136, 161, 0.4);
+  background-color: #c9758c;
+}
+
+.aboutSection {
+  padding: 6rem 2rem;
+  background-color: var(--bg-color);
+}
+
+.aboutContent {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  gap: 4rem;
+  align-items: center;
+}
+
+.aboutText {
+  flex: 1;
+}
+
+.aboutTitle {
+  font-size: 2.5rem;
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+}
+
+.aboutDesc {
+  font-size: 1.1rem;
+  color: var(--text-dark);
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+}
+
+.aboutImage {
+  flex: 1;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  background-color: rgba(217, 136, 161, 0.1);
+  aspect-ratio: 4/5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-color);
+  font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .title { font-size: 2.5rem; }
+  .aboutContent {
+    flex-direction: column;
+    gap: 2rem;
+  }
+}

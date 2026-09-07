@@ -2,14 +2,89 @@
 
 import { useCart, Product } from "@/context/CartContext";
 import styles from "./page.module.css";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import { getProducts } from "@/services/productService";
 
 const CATEGORIES = ["Todos", "Maternidade", "Presentes", "Decoração", "Acessórios"];
 
-export default function Catalogo() {
+function ProductCard({ product }: { product: Product }) {
   const { addItem } = useCart();
+  const [currentImg, setCurrentImg] = useState(0);
+
+  const images = product.images && product.images.length > 0 ? product.images : [];
+
+  const nextImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentImg((prev) => (prev + 1) % images.length);
+  };
+
+  const prevImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentImg((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  };
+
+  return (
+    <div className={styles.card}>
+      <div
+        className={styles.imagePlaceholder}
+        style={images.length > 0 ? {
+          backgroundImage: `url(${images[currentImg]})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          color: 'transparent'
+        } : {}}
+      >
+        {images.length === 0 && <span>Foto: {product.name}</span>}
+        
+        {images.length > 1 && (
+          <>
+            <button className={styles.galleryBtn} onClick={prevImage} style={{ left: 5 }}>
+              <ChevronLeft size={20} />
+            </button>
+            <button className={styles.galleryBtn} onClick={nextImage} style={{ right: 5 }}>
+              <ChevronRight size={20} />
+            </button>
+            <div className={styles.dotsContainer}>
+              {images.map((_, idx) => (
+                <div key={idx} className={`${styles.dot} ${idx === currentImg ? styles.dotActive : ""}`} />
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+      
+      <div className={styles.cardContent}>
+        <span className={styles.category}>{product.category}</span>
+        <h2 className={styles.productName}>{product.name}</h2>
+        <p className={styles.productDesc}>{product.description}</p>
+        
+        {product.isReadyDelivery ? (
+          <span className={styles.badgeReady}>✓ Pronta Entrega</span>
+        ) : product.leadTimeDays ? (
+          <span className={styles.badgeLeadTime}>⏱ {product.leadTimeDays} dias para confecção</span>
+        ) : null}
+
+        <div className={styles.cardFooter}>
+          <span className={styles.price}>
+            R$ {product.price.toFixed(2).replace('.', ',')}
+          </span>
+          <button
+            className={styles.addButton}
+            onClick={() => addItem(product)}
+            title={product.stock === 0 ? "Fora de estoque" : "Adicionar à Encomenda"}
+            disabled={product.stock === 0}
+            style={{ opacity: product.stock === 0 ? 0.5 : 1 }}
+          >
+            <ShoppingCart size={20} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function Catalogo() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState("Todos");
@@ -39,7 +114,6 @@ export default function Catalogo() {
         <p className={styles.subtitle}>Explore nossas peças feitas à mão com muito carinho.</p>
       </div>
 
-      {/* Filtros de Categoria */}
       <div className={styles.filterBar}>
         {CATEGORIES.map(cat => (
           <button
@@ -63,45 +137,7 @@ export default function Catalogo() {
       ) : (
         <div className={styles.grid}>
           {filteredProducts.map((product) => (
-            <div key={product.id} className={styles.card}>
-              <div
-                className={styles.imagePlaceholder}
-                style={product.image ? {
-                  backgroundImage: `url(${product.image})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  color: 'transparent'
-                } : {}}
-              >
-                {!product.image && <span>Foto: {product.name}</span>}
-              </div>
-              <div className={styles.cardContent}>
-                <span className={styles.category}>{product.category}</span>
-                <h2 className={styles.productName}>{product.name}</h2>
-                <p className={styles.productDesc}>{product.description}</p>
-                
-                {product.isReadyDelivery ? (
-                  <span className={styles.badgeReady}>✓ Pronta Entrega</span>
-                ) : product.leadTimeDays ? (
-                  <span className={styles.badgeLeadTime}>⏱ {product.leadTimeDays} dias para confecção</span>
-                ) : null}
-
-                <div className={styles.cardFooter}>
-                  <span className={styles.price}>
-                    R$ {product.price.toFixed(2).replace('.', ',')}
-                  </span>
-                  <button
-                    className={styles.addButton}
-                    onClick={() => addItem(product)}
-                    title={product.stock === 0 ? "Fora de estoque" : "Adicionar à Encomenda"}
-                    disabled={product.stock === 0}
-                    style={{ opacity: product.stock === 0 ? 0.5 : 1 }}
-                  >
-                    <ShoppingCart size={20} />
-                  </button>
-                </div>
-              </div>
-            </div>
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
       )}
