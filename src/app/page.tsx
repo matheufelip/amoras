@@ -29,14 +29,24 @@ export default function Home() {
       {/* Hero Section */}
       <section className={styles.hero}>
         <div className={styles.heroContent}>
-          <h1 className={styles.title}>Detalhes que encantam, feitos à mão para você.</h1>
-          <p className={styles.subtitle}>
-            Personalizamos momentos especiais com peças artesanais únicas e cheias de afeto.
-            Do enxoval do bebê ao presente perfeito.
-          </p>
-          <Link href="/catalogo" className={styles.ctaButton}>
-            Ver Catálogo Completo
-          </Link>
+          <div className={styles.heroText}>
+            <span className={styles.heroBadge}>Feito com afeto</span>
+            <h1 className={styles.title}>Detalhes que encantam, feitos à mão para você.</h1>
+            <p className={styles.subtitle}>
+              Personalizamos momentos especiais com peças artesanais únicas e cheias de afeto.
+              Do enxoval do bebê ao presente perfeito.
+            </p>
+            <div className={styles.heroButtons}>
+              <Link href="/catalogo" className={styles.ctaButton}>
+                Ver Catálogo Completo
+              </Link>
+            </div>
+          </div>
+          <div className={styles.heroImageContainer}>
+            <div className={styles.blobShape}>
+              <img src="/hero-placeholder.jpg" alt="Artesanato Amoras" className={styles.heroImg} />
+            </div>
+          </div>
         </div>
       </section>
 
