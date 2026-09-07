@@ -26,23 +26,33 @@ function ProductCard({ product }: { product: Product }) {
 
   return (
     <div className={styles.card}>
-      <div
-        className={styles.imagePlaceholder}
-        style={images.length > 0 ? {
-          backgroundImage: `url(${images[currentImg]})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          color: 'transparent'
-        } : {}}
-      >
+      <div className={styles.imagePlaceholder}>
         {images.length === 0 && <span>Foto: {product.name}</span>}
         
+        {images.map((img, idx) => (
+          <img 
+            key={idx}
+            src={img}
+            alt={`${product.name} - Foto ${idx + 1}`}
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              opacity: idx === currentImg ? 1 : 0,
+              transition: 'opacity 0.3s ease-in-out'
+            }}
+          />
+        ))}
+
         {images.length > 1 && (
           <>
-            <button className={styles.galleryBtn} onClick={prevImage} style={{ left: 5 }}>
+            <button className={`${styles.galleryBtn} ${styles.btnPrev}`} onClick={prevImage}>
               <ChevronLeft size={20} />
             </button>
-            <button className={styles.galleryBtn} onClick={nextImage} style={{ right: 5 }}>
+            <button className={`${styles.galleryBtn} ${styles.btnNext}`} onClick={nextImage}>
               <ChevronRight size={20} />
             </button>
             <div className={styles.dotsContainer}>

@@ -76,7 +76,7 @@ export default function Carrinho() {
         <div className={styles.itemsList}>
           {items.map((item) => (
             <div key={item.product.id} className={styles.cartItem}>
-              <div className={styles.itemImagePlaceholder} style={item.product.image ? { backgroundImage: `url(${item.product.image})`, backgroundSize: 'cover' } : {}}></div>
+              <div className={styles.itemImagePlaceholder} style={item.product.images?.[0] ? { backgroundImage: `url(${item.product.images[0]})`, backgroundSize: 'cover' } : {}}></div>
               <div className={styles.itemDetails}>
                 <h3 className={styles.itemName}>{item.product.name}</h3>
                 <p className={styles.itemPrice}>R$ {item.product.price.toFixed(2).replace('.', ',')}</p>
