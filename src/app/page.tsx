@@ -44,7 +44,7 @@ export default function Home() {
           </div>
           <div className={styles.heroImageContainer}>
             <div className={styles.blobShape}>
-              <img src="/hero-placeholder.jpg" alt="Artesanato Amoras" className={styles.heroImg} />
+              <img src={settings?.heroImage || "/hero-placeholder.jpg"} alt="Artesanato Amoras" className={styles.heroImg} />
             </div>
           </div>
         </div>

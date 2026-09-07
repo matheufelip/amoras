@@ -11,6 +11,9 @@ export default function ConfiguracoesPage() {
   const [story, setStory] = useState("");
   const [photoUrl, setPhotoUrl] = useState("");
   const [newPhotoFile, setNewPhotoFile] = useState<File | null>(null);
+
+  const [heroPhotoUrl, setHeroPhotoUrl] = useState("");
+  const [newHeroPhotoFile, setNewHeroPhotoFile] = useState<File | null>(null);
   
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -24,6 +27,7 @@ export default function ConfiguracoesPage() {
           setName(data.artisanName || "");
           setStory(data.artisanStory || "");
           setPhotoUrl(data.artisanPhoto || "");
+          setHeroPhotoUrl(data.heroImage || "");
         }
       } catch (err) {
         console.error(err);
@@ -40,6 +44,12 @@ export default function ConfiguracoesPage() {
     }
   };
 
+  const handleHeroFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setNewHeroPhotoFile(e.target.files[0]);
+    }
+  };
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
@@ -47,20 +57,27 @@ export default function ConfiguracoesPage() {
 
     try {
       let finalPhotoUrl = photoUrl;
-      
       if (newPhotoFile) {
         finalPhotoUrl = await uploadToImgBB(newPhotoFile);
         setPhotoUrl(finalPhotoUrl);
       }
 
+      let finalHeroPhotoUrl = heroPhotoUrl;
+      if (newHeroPhotoFile) {
+        finalHeroPhotoUrl = await uploadToImgBB(newHeroPhotoFile);
+        setHeroPhotoUrl(finalHeroPhotoUrl);
+      }
+
       await saveSettings({
         artisanName: name,
         artisanStory: story,
-        artisanPhoto: finalPhotoUrl
+        artisanPhoto: finalPhotoUrl,
+        heroImage: finalHeroPhotoUrl
       });
 
       setMessage({ type: "success", text: "Configurações salvas com sucesso!" });
       setNewPhotoFile(null);
+      setNewHeroPhotoFile(null);
     } catch (err) {
       console.error(err);
       setMessage({ type: "error", text: "Erro ao salvar as configurações." });
@@ -113,7 +130,7 @@ export default function ConfiguracoesPage() {
           </div>
 
           <div className={styles.inputGroup}>
-            <label>Foto da Artesã</label>
+            <label>Foto da Artesã (Bolinha)</label>
             <div className={styles.photoContainer}>
               <div 
                 className={styles.photoPreview} 
@@ -130,9 +147,42 @@ export default function ConfiguracoesPage() {
                   style={{ display: "none" }}
                 />
                 <label htmlFor="artisanPhoto" className={styles.uploadButton}>
-                  Escolher nova foto
+                  Escolher foto da Artesã
                 </label>
                 <p className={styles.helperText}>Formato quadrado recomendado.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className={styles.section} style={{ borderTop: '1px solid #eee', paddingTop: '2rem' }}>
+          <h2>Vitrine Principal</h2>
+          <p className={styles.sectionDesc}>Esta é a foto grande que aparece no topo do site (Hero).</p>
+
+          <div className={styles.inputGroup}>
+            <label>Foto de Capa do Site</label>
+            <div className={styles.photoContainer}>
+              <div 
+                className={styles.photoPreview} 
+                style={{
+                  width: '180px', height: '180px', borderRadius: '20px',
+                  ...(newHeroPhotoFile ? { backgroundImage: `url(${URL.createObjectURL(newHeroPhotoFile)})` } : heroPhotoUrl ? { backgroundImage: `url(${heroPhotoUrl})` } : {})
+                }}
+              >
+                {!newHeroPhotoFile && !heroPhotoUrl && <ImageIcon size={40} opacity={0.5} />}
+              </div>
+              <div className={styles.photoActions}>
+                <input
+                  type="file"
+                  id="heroPhoto"
+                  accept="image/*"
+                  onChange={handleHeroFileChange}
+                  style={{ display: "none" }}
+                />
+                <label htmlFor="heroPhoto" className={styles.uploadButton}>
+                  Escolher foto de Capa
+                </label>
+                <p className={styles.helperText}>Escolha uma foto bem bonita dos seus produtos!</p>
               </div>
             </div>
           </div>

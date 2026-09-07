@@ -8,6 +8,7 @@ export interface ArtisanSettings {
   artisanName: string;
   artisanStory: string;
   artisanPhoto: string;
+  heroImage?: string;
 }
 
 export const getSettings = async (): Promise<ArtisanSettings | null> => {
