@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Package, ShoppingBag, LogOut } from "lucide-react";
+import { Package, ShoppingBag, LogOut, Settings } from "lucide-react";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
@@ -45,6 +45,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <nav style={{ flex: 1, padding: "1.5rem 0" }}>
           <NavLink href="/admin" active={pathname === "/admin"} icon={<Package size={20} />} label="Produtos" />
           <NavLink href="/admin/pedidos" active={pathname === "/admin/pedidos"} icon={<ShoppingBag size={20} />} label="Pedidos" />
+          <NavLink href="/admin/configuracoes" active={pathname === "/admin/configuracoes"} icon={<Settings size={20} />} label="Configurações" />
         </nav>
 
         <div style={{ padding: "0 1rem" }}>
