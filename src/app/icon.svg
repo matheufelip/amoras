@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <circle cx="50" cy="50" r="46" fill="#FDF9F1" stroke="#8A5B8E" stroke-width="8" />
+  
+  <g fill="#8A5B8E">
+    <!-- Folhas -->
+    <path d="M 50 24 Q 40 15 30 25 Q 40 30 50 24 Z" />
+    <path d="M 50 24 Q 60 15 70 25 Q 60 30 50 24 Z" />
+    <path d="M 47 12 L 53 12 L 50 25 Z" />
+
+    <!-- Bagas -->
+    <circle cx="38" cy="38" r="8" />
+    <circle cx="50" cy="36" r="9" />
+    <circle cx="62" cy="38" r="8" />
+
+    <circle cx="32" cy="52" r="8.5" />
+    <circle cx="44" cy="49" r="9.5" />
+    <circle cx="56" cy="49" r="9.5" />
+    <circle cx="68" cy="52" r="8.5" />
+
+    <circle cx="38" cy="65" r="8" />
+    <circle cx="50" cy="63" r="9.5" />
+    <circle cx="62" cy="65" r="8" />
+
+    <circle cx="50" cy="76" r="8" />
+  </g>
+</svg>
