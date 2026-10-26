@@ -2,11 +2,10 @@
 
 import Link from "next/link";
 import styles from "./page.module.css";
-import { Plus, Edit2, Trash2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Product } from "@/context/CartContext";
-import { getProducts, deleteProduct } from "@/services/productService";
-import Image from "next/image";
+import { getProducts, deleteProduct, updateProductStock } from "@/services/productService";
+import { Plus, Edit2, Trash2, PlusCircle, MinusCircle } from "lucide-react";
 
 export default function AdminDashboard() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -25,6 +24,19 @@ export default function AdminDashboard() {
       alert("Erro ao carregar produtos do banco de dados.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleStockChange = async (id: string, currentStock: number, delta: number) => {
+    const newStock = Math.max(0, currentStock + delta);
+    // Atualização otimista imediata na interface
+    setProducts(prev => prev.map(p => p.id === id ? { ...p, stock: newStock } : p));
+    try {
+      await updateProductStock(id, newStock);
+    } catch (error) {
+      console.error(error);
+      alert("Erro ao atualizar estoque.");
+      await loadProducts(); // Reverte em caso de falha
     }
   };
 
@@ -85,7 +97,42 @@ export default function AdminDashboard() {
                 </td>
                 <td>
                   <div className={styles.stockInfo}>
-                    <span className={styles.stockCount}>{product.stock} un.</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.25rem' }}>
+                      <button 
+                        onClick={() => handleStockChange(product.id, product.stock, -1)}
+                        disabled={product.stock <= 0}
+                        style={{ 
+                          background: 'none', 
+                          border: 'none', 
+                          cursor: product.stock <= 0 ? 'not-allowed' : 'pointer',
+                          color: product.stock <= 0 ? '#ccc' : 'var(--primary-color)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          padding: 2
+                        }}
+                        title="Diminuir 1 unidade"
+                      >
+                        <MinusCircle size={18} />
+                      </button>
+                      <span className={styles.stockCount} style={{ minWidth: 45, textAlign: 'center', fontWeight: 700 }}>
+                        {product.stock} un.
+                      </span>
+                      <button 
+                        onClick={() => handleStockChange(product.id, product.stock, 1)}
+                        style={{ 
+                          background: 'none', 
+                          border: 'none', 
+                          cursor: 'pointer',
+                          color: 'var(--primary-color)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          padding: 2
+                        }}
+                        title="Aumentar 1 unidade"
+                      >
+                        <PlusCircle size={18} />
+                      </button>
+                    </div>
                     {product.isReadyDelivery ? (
                       <span className={styles.badgeReady}>Pronta Entrega</span>
                     ) : (

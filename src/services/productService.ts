@@ -1,6 +1,7 @@
 import { db } from "@/lib/firebase";
-import { collection, addDoc, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { Product } from "@/context/CartContext";
+import { compressImage } from "@/utils/imageCompressor";
 
 const COLLECTION_NAME = "products";
 
@@ -8,8 +9,11 @@ export const uploadToImgBB = async (file: File): Promise<string> => {
   const apiKey = process.env.NEXT_PUBLIC_IMGBB_API_KEY;
   if (!apiKey) throw new Error("ImgBB API key is missing");
 
+  // Otimização e compressão automática para WebP leve antes de enviar
+  const optimizedFile = await compressImage(file);
+
   const formData = new FormData();
-  formData.append("image", file);
+  formData.append("image", optimizedFile);
 
   const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
     method: "POST",
@@ -69,4 +73,37 @@ export const getProducts = async (): Promise<Product[]> => {
 export const deleteProduct = async (id: string): Promise<void> => {
   // Com ImgBB não apagamos a imagem da nuvem automaticamente, mas apagamos o registro do banco
   await deleteDoc(doc(db, COLLECTION_NAME, id));
+};
+
+export const updateProductStock = async (id: string, newStock: number): Promise<void> => {
+  const safeStock = Math.max(0, Number(newStock));
+  await updateDoc(doc(db, COLLECTION_NAME, id), {
+    stock: safeStock
+  });
+};
+
+export const updateProduct = async (
+  id: string, 
+  productData: Partial<Omit<Product, "id" | "images">>, 
+  newImageFiles?: File[],
+  existingImages?: string[]
+): Promise<void> => {
+  let finalImages: string[] = existingImages ? [...existingImages] : [];
+
+  if (newImageFiles && newImageFiles.length > 0) {
+    for (const file of newImageFiles) {
+      const url = await uploadToImgBB(file);
+      finalImages.push(url);
+    }
+  }
+
+  const cleanData = Object.fromEntries(
+    Object.entries(productData).filter(([_, v]) => v !== undefined)
+  );
+
+  await updateDoc(doc(db, COLLECTION_NAME, id), {
+    ...cleanData,
+    images: finalImages,
+    updatedAt: new Date().toISOString()
+  });
 };

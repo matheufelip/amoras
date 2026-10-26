@@ -1,0 +1,27 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 1. Produtos: Qualquer visitante da loja pode ler (para o catálogo carregar),
+    // mas apenas administradores autenticados podem criar, editar estoque ou deletar.
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // 2. Configurações da Loja (foto da Kelly, história, banner):
+    // Visitantes podem ler; apenas administradores autenticados podem salvar.
+    match /settings/{docId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // 3. Pedidos:
+    // Qualquer cliente pode criar uma nova intenção de pedido ao fechar o carrinho;
+    // Apenas administradores autenticados podem listar todos os pedidos, alterar status ou excluir pedidos pendentes.
+    match /orders/{orderId} {
+      allow create: if true;
+      allow read, update, delete: if request.auth != null;
+    }
+  }
+}

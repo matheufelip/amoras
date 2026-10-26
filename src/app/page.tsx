@@ -53,11 +53,16 @@ export default function Home() {
       {/* Seção Sobre a Artesã */}
       <section className={styles.aboutSection}>
         <div className={styles.aboutContent}>
-          <div 
-            className={styles.aboutImage}
-            style={settings?.artisanPhoto ? { backgroundImage: `url(${settings.artisanPhoto})`, backgroundSize: 'cover', backgroundPosition: 'center', color: 'transparent' } : {}}
-          >
-            {!settings?.artisanPhoto && (
+          <div className={styles.aboutImage}>
+            {settings?.artisanPhoto ? (
+              <img 
+                src={settings.artisanPhoto} 
+                alt={`Artesã ${artisanName}`}
+                className={styles.aboutImgElement}
+                loading="eager"
+                decoding="async"
+              />
+            ) : (
               <div style={{ textAlign: "center" }}>
                 <Heart size={48} style={{ marginBottom: "1rem" }} />
                 <p>Foto da Artesã<br/>(Adicionar no painel)</p>
@@ -73,14 +78,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* Footer / Link Escondido Admin */}
-      <footer style={{ textAlign: "center", padding: "2rem", opacity: 0.5, fontSize: "0.8rem", marginTop: "2rem" }}>
-        <p>© {new Date().getFullYear()} Amoras - Artesanatos Personalizados. Todos os direitos reservados.</p>
-        <Link href="/admin" style={{ color: "inherit", textDecoration: "none", marginTop: "0.5rem", display: "inline-block" }}>
-          Acesso Restrito
-        </Link>
-      </footer>
     </div>
   );
 }
