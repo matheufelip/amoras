@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CookieConsent from "@/components/CookieConsent";
+import FloatingWhatsApp from "@/components/FloatingWhatsApp";
 import { CartProvider } from "@/context/CartContext";
 
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
@@ -22,6 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Header />
           <main>{children}</main>
           <Footer />
+          <FloatingWhatsApp />
           <CookieConsent />
         </CartProvider>
       </body>
