@@ -169,7 +169,7 @@ export default function LoginAdmin() {
             className={styles.linkButton}
             onClick={() => { setView("resetPassword"); setResetEmail(email); setError(""); }}
           >
-            Primeiro acesso ou esqueceu a senha?
+            Esqueceu sua senha?
           </button>
         </form>
       </div>

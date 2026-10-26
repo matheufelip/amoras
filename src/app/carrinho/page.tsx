@@ -5,6 +5,7 @@ import styles from "./page.module.css";
 import Link from "next/link";
 import { MessageCircle, Trash2 } from "lucide-react";
 import { saveOrder } from "@/services/orderService";
+import { decrementProductStock } from "@/services/productService";
 import { useState } from "react";
 
 export default function Carrinho() {
@@ -44,8 +45,13 @@ export default function Carrinho() {
         whatsappMessage: message,
         createdAt: new Date().toISOString()
       });
+
+      // Baixa automática de estoque das peças encomendadas
+      await decrementProductStock(
+        items.map(i => ({ productId: i.product.id, quantity: i.quantity }))
+      );
     } catch (err) {
-      console.error("Erro ao salvar pedido:", err);
+      console.error("Erro ao salvar pedido ou abater estoque:", err);
       // Mesmo se falhar, abre o WhatsApp
     } finally {
       setSaving(false);

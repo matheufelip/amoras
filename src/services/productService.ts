@@ -82,6 +82,23 @@ export const updateProductStock = async (id: string, newStock: number): Promise<
   });
 };
 
+export const decrementProductStock = async (items: { productId: string; quantity: number }[]): Promise<void> => {
+  for (const item of items) {
+    try {
+      const docRef = doc(db, COLLECTION_NAME, item.productId);
+      const snapshot = await getDocs(collection(db, COLLECTION_NAME));
+      const targetDoc = snapshot.docs.find(d => d.id === item.productId);
+      if (targetDoc) {
+        const currentStock = Number(targetDoc.data().stock || 0);
+        const newStock = Math.max(0, currentStock - item.quantity);
+        await updateDoc(docRef, { stock: newStock });
+      }
+    } catch (err) {
+      console.error(`Erro ao abater estoque do produto ${item.productId}:`, err);
+    }
+  }
+};
+
 export const updateProduct = async (
   id: string, 
   productData: Partial<Omit<Product, "id" | "images">>, 

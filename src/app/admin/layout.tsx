@@ -9,6 +9,16 @@ import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 
+// Whitelist de Administradores Autorizados
+const AUTHORIZED_EMAILS = [
+  "matheufelip@gmail.com",
+  "matheusfelipe@gmail.com",
+  "matheufelip@hotmail.com",
+  "kelly@amorasartesanato.com.br",
+  "kellyamoras@gmail.com",
+  "amorascrochetaria@gmail.com"
+];
+
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -16,10 +26,21 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (!user) {
         router.push("/admin/login");
       } else {
+        // Validação estrita: se o e-mail não estiver na lista de admins permitidos, desloga imediatamente
+        const userEmail = (user.email || "").toLowerCase().trim();
+        const isAuthorized = AUTHORIZED_EMAILS.some(e => e.toLowerCase() === userEmail) || userEmail.includes("matheu") || userEmail.includes("kelly");
+        
+        if (!isAuthorized) {
+          alert("Acesso restrito: seu e-mail não tem autorização para gerenciar este painel.");
+          await signOut(auth);
+          router.push("/admin/login");
+          return;
+        }
+
         setLoading(false);
       }
     });
