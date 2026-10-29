@@ -97,7 +97,7 @@ export default function LoginAdmin() {
                   id="resetEmail"
                   value={resetEmail}
                   onChange={(e) => setResetEmail(e.target.value)}
-                  placeholder="kelly@email.com"
+                  placeholder="amorascrochetaria@gmail.com"
                   required
                 />
               </div>
@@ -143,7 +143,7 @@ export default function LoginAdmin() {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="kelly@email.com"
+              placeholder="amorascrochetaria@gmail.com"
               required
             />
           </div>
